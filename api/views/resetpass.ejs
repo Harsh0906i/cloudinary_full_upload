@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .i {
+            display: flex;
+            flex-direction: column;
+            padding: 50px;
+            gap: 20px;
+
+        }
+    </style>
+</head>
+
+<body class="body">
+    <h1>Reset password</h1>
+    <form class="i" action="/reset-password" method="post">
+        <input type="password" name="newPassword" required placeholder="Enter new password...">
+        <input type="hidden" name="token" value="<%= token %>"> 
+        <button>Reset</button>
+    </form>
+
+</body>
+<script>
+</script>
+
+</html>
