@@ -91,7 +91,7 @@ app.post('/login', async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-});
+}); 
 
 app.get('/home', (req, res) => {
     res.render('home');
