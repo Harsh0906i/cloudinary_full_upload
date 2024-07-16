@@ -146,7 +146,6 @@ app.get('/reset-password', (req, res) => {
 app.post('/reset-password', async (req, res) => {
     try {
         const { newPassword, token } = req.body;
-        console.log(token);
         const user = await userSchema.findOneAndUpdate({ resetPasswordToken: token })
 
         if (!user) {
