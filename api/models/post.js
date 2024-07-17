@@ -17,11 +17,24 @@ const postSchema = new mongoose.Schema({
     },
     comment: [
         {
-            username:{
-                type:String
+            username: {
+                type: String
             },
-            text:{
-                type:String
+            text: {
+                type: String
+            },
+            userRef: {
+                type: String
+            }
+        }
+    ],
+    like: [
+        {
+            username: {
+                type: String
+            },
+            userRef: {
+                type: String
             }
         }
     ]

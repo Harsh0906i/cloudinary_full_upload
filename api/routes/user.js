@@ -76,14 +76,12 @@ router.post('/comment', verify, async (req, res) => {
     const { id } = req.user;
     try {
         const userpost = await postSchema.findById(postid);
-        const currentUser=await userSchema.findById(id);
-        if (!userpost&&currentUser) {
+        const currentUser = await userSchema.findById(id);
+        if (!userpost && currentUser) {
             req.flash('message', 'Error posting comment!');
             return res.redirect('/home');
         }
-        // console.log(currentUser.email);
-
-       userpost.comment.push({ username:currentUser.email, text: comment });
+        userpost.comment.push({ username: currentUser.email, text: comment, userRef: id });
         await userpost.save(); // Save the updated post document
 
         req.flash('message', 'Comment added successfully!');
@@ -95,5 +93,132 @@ router.post('/comment', verify, async (req, res) => {
     }
 });
 
+router.post('/commentdelete', verify, async (req, res) => {
+    try {
+        const { postid, deletecomment } = req.body;
+        const { id: userId } = req.user;
+
+        // Find the post by postid
+        const post = await postSchema.findById(postid);
+        if (!post) {
+            req.flash('message', 'Post not found');
+            return res.redirect('/home');
+        }
+
+        // Find the comment by deletecomment within the post
+        const comment = post.comment.id(deletecomment);
+        if (!comment) {
+            req.flash('message', 'Comment not found');
+            return res.redirect('/home');
+        }
+
+        // Check if the user is authorized to delete the comment
+        if (comment.userRef !== userId) {
+            req.flash('message', 'You are not authorized to delete this comment');
+            return res.redirect('/home');
+        }
+
+        // Pull the comment
+        const updatedPost = await postSchema.findByIdAndUpdate(
+            postid,
+            { $pull: { comment: { _id: deletecomment } } },
+            { new: true }
+        );
+
+        req.flash('message', updatedPost ? 'Comment deleted successfully' : 'Comment not found');
+        res.redirect('/home');
+    } catch (error) {
+        console.log('Error deleting comment:', error);
+        req.flash('message', 'Error deleting comment');
+        res.redirect('/home');
+    }
+});
+
+router.post('/deletePost', verify, async (req, res) => {
+    try {
+        const { postdelete } = req.body;
+        const { id } = req.user;
+        const post = await postSchema.findById(postdelete);
+        if (!post) {
+            req.flash('message', 'error deleting post')
+            res.redirect('/home')
+            return;
+        }
+        if (id !== post.userRef) {
+            req.flash('message', 'you can only delete your own post!')
+            res.redirect('/home');
+            return;
+        }
+        const deletedPost = await postSchema.findByIdAndDelete(postdelete);
+
+        if (!deletedPost) {
+            req.flash('message', 'Post not found');
+        } else {
+            req.flash('message', 'Post deleted successfully!');
+        }
+        res.redirect('/home');
+    } catch (error) {
+        console.log('Error deleting post:', error);
+        req.flash('message', 'Error deleting post');
+        res.redirect('/home');
+    }
+});
+
+router.post('/like', verify, async (req, res) => {
+    try {
+        const { like } = req.body; // This is the post ID to be liked
+        const { id } = req.user; // This is the user ID from the verified user
+
+        // Find the user and the post to be liked
+        const currentUser = await userSchema.findById(id);
+        const likedPost = await postSchema.findById(like);
+
+        if (!likedPost) {
+            req.flash('message', 'Post not found');
+            return res.redirect('/home');
+        }
+
+        // Check if the user has already liked the post
+        const hasLiked = likedPost.like.some(like => like.userRef === id);
+
+        if (hasLiked) {
+            req.flash('message', 'You have already liked this post');
+            return res.redirect('/home');
+        }
+
+        // Add the like to the post
+        likedPost.like.push({ userRef: id, username: currentUser.email });
+        await likedPost.save();
+
+        console.log('Post liked:', likedPost);
+        req.flash('message', 'Post liked successfully');
+        res.redirect('/home');
+    } catch (error) {
+        console.log('Error liking post:', error);
+        req.flash('message', 'Error liking post');
+        res.redirect('/home');
+    }
+});
+
+router.post('/update', async (req, res) => {
+    const { postId, updatedContent } = req.body;
+
+    try {
+        // Find the post by postId
+        const post = await postSchema.findByIdAndUpdate(postId, { post: updatedContent }, { new: true });
+
+        if (!post) {
+            req.flash('message', 'Post not found');
+        } else {
+            req.flash('message', 'Post updated successfully');
+        }
+
+        res.redirect('/home'); // Redirect to home page after update
+    } catch (error) {
+        console.error('Error updating post:', error);
+        req.flash('message', 'Error updating post');
+        res.redirect('/home');
+    }
+});
 
 module.exports = router;
