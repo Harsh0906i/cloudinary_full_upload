@@ -55,15 +55,6 @@ app.get('/forgetpassword', (req, res) => {
     res.render('forgetpass', { message: req.flash('message') });
 });
 
-app.get('/showComment', async (req, res) => {
-    const posts = await postSchema.find();
-
-    const comments=posts.map((post)=>{
-        console.log(post.comment)
-    })
-    res.render('Comment',{posts});
-})
-
 app.listen('8080', () => {
     console.log('listening on 8080')
 });
