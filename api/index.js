@@ -50,10 +50,10 @@ app.get('/home', async (req, res) => {
 app.get('/reset-password', (req, res) => {
     res.render('resetpass', { token: req.query.token })
 });
-app.post('/update', async(req,res)=>{
-    const{postupdate}=req.body;
-    const post=await postSchema.findById(postupdate);
-    res.render('update',{post});
+app.post('/update', async (req, res) => {
+    const { postupdate } = req.body;
+    const post = await postSchema.findById(postupdate);
+    res.render('update', { post });
 })
 
 app.get('/forgetpassword', (req, res) => {

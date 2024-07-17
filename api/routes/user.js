@@ -200,25 +200,44 @@ router.post('/like', verify, async (req, res) => {
     }
 });
 
-router.post('/update', async (req, res) => {
+router.post('/update', verify, async (req, res) => {
     const { postId, updatedContent } = req.body;
+    const { id } = req.user;
 
     try {
         // Find the post by postId
-        const post = await postSchema.findByIdAndUpdate(postId, { post: updatedContent }, { new: true });
+        const post = await postSchema.findById(postId);
 
+        // Check if the post exists
         if (!post) {
             req.flash('message', 'Post not found');
+            return res.redirect('/home');
+        }
+
+        // Check if the user is authorized to update the post
+        if (id !== post.userRef.toString()) {
+            req.flash('message', 'You can only update your own post!');
+            return res.redirect('/home');
+        }
+
+        // Update the post content
+        const updatedPost = await postSchema.findByIdAndUpdate(postId, { post: updatedContent }, { new: true });
+
+        if (!updatedPost) {
+            req.flash('message', 'Error updating post');
         } else {
             req.flash('message', 'Post updated successfully');
         }
 
-        res.redirect('/home'); // Redirect to home page after update
+        // Redirect to home page after update
+        res.redirect('/home');
     } catch (error) {
         console.error('Error updating post:', error);
         req.flash('message', 'Error updating post');
         res.redirect('/home');
     }
 });
+
+
 
 module.exports = router;
