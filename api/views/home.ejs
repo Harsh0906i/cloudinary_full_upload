@@ -1,11 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input {
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border: 1px solid black;
+            margin: 20px;
+        }
+
+        .posts-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .post-list {
+            padding: 20px;
+        }
+
+        .post-item {
+            border: 0.5px solid black;
+            padding: 10px;
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .post-header {
+            padding-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .post-content {
+            padding-bottom: 10px;
+        }
+
+        .comment-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .comment {
+            margin: 5px 0;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Home page</h1>
+    <div class="body">
+        <h1>Posts</h1>
+        <form class="form" action="/api/post/post" method="post" enctype="multipart/form-data">
+            <input class="input" type="file" name="image" accept="image/*">
+            <textarea class="input" name="post" placeholder="Write something..."></textarea>
+            <button type="submit">Post</button>
+        </form>
+        <div class="posts-container">
+            <h2>All posts:</h2>
+            <ul class="post-list">
+                <% posts?.forEach(post=> { %>
+                    <li class="post-item">
+                        <div class="post-header">
+                            <%= post.username %>
+                        </div>
+                        <div class="post-content">
+                            <%= post.post %>
+                        </div>
+
+                        <% if (post.imgUrl) { %>
+                            <img src="<%= post.imgUrl %>" alt="Post image" width="200">
+                            <% } %>
+
+                                <form class="comment-form" action="/api/post/comment" method="post">
+                                    <input type="text" required name="comment" placeholder="Comment...">
+                                    <input type="hidden" name="postid" value="<%= post._id %>">
+                                    <button type="submit">Comment</button>
+                                </form>
+
+                                <div class="comment-container">
+                                    <% post.comment.forEach(comment=> { %>
+                                        <div class="comment">
+                                            <strong>
+                                                <%= comment.username %>:
+                                            </strong>
+                                            <%= comment.text %>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                    </li>
+                    <% }) %>
+            </ul>
+        </div>
+    </div>
 </body>
+
 </html>

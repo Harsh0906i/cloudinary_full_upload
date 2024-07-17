@@ -25,7 +25,7 @@
 
 <body class="body">
     <h1>Reset password</h1>
-    <form class="i" action="/reset-password" method="post">
+    <form class="i" action="/api/auth/reset-password" method="post">
         <input type="password" name="newPassword" required placeholder="Enter new password...">
         <input type="hidden" name="token" value="<%= token %>"> 
         <button>Reset</button>
