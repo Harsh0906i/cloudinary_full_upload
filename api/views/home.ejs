@@ -93,12 +93,15 @@
 
 <body>
     <div class="body">
-        <h1>Posts</h1>
-        <form class="form" action="/api/post/post" method="post" enctype="multipart/form-data">
-            <input class="input" type="file" name="image" accept="image/*">
-            <textarea class="input" name="post" placeholder="Write something..."></textarea>
-            <button type="submit">Post</button>
-        </form>
+        <h1>Create post</h1>
+        <div>
+            <form class="form" action="/api/post/post" method="post" enctype="multipart/form-data">
+                <input class="input" type="file" name="image" accept="image/*">
+                <textarea class="input" name="post" placeholder="Write something..."></textarea>
+                <button type="submit">Post</button>
+            </form>
+        </div>
+
         <div class="posts-container">
             <h2>All posts:</h2>
             <ul class="post-list">

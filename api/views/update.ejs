@@ -30,17 +30,17 @@
             max-width: 600px;
         }
 
-        h1 {
+        .h1 {
             text-align: center;
             margin-bottom: 20px;
         }
 
-        form {
+        .form {
             display: flex;
             flex-direction: column;
         }
 
-        input[type="text"] {
+        .input[type="text"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -49,13 +49,14 @@
             font-size: 16px;
         }
 
-        img {
+        .img {
+            height: 70vh;
             max-width: 100%;
             margin-bottom: 10px;
             border-radius: 4px;
         }
 
-        button {
+        .button {
             background-color: #007bff;
             color: #fff;
             border: none;
@@ -65,7 +66,7 @@
             font-size: 16px;
         }
 
-        button:hover {
+        .button:hover {
             background-color: #0056b3;
         }
     </style>
@@ -73,15 +74,16 @@
 
 <body>
     <div class="container">
-        <h1>Edit Post</h1>
+        <h1 class="h1">Edit Post</h1>
         <h5>
             <%= post.username %>
         </h5>
-        <form action="/api/post/update" method="post">
-            <input type="text" value="<%= post.post %>" name="updatedContent" placeholder="Type your update...">
-            <img src="<%= post.imgUrl %>" alt="Post Image">
+        <form action="/api/post/update" class="form" method="post">
+            <input type="text" class="input" value="<%= post.post %>" name="updatedContent"
+                placeholder="Type your update...">
+            <img src="<%= post.imgUrl %>" class="img" alt="Post Image">
             <input type="hidden" value="<%= post._id %>" name="postId">
-            <button type="submit">Update</button>
+            <button type="submit" class="button">Update</button>
         </form>
     </div>
 </body>
