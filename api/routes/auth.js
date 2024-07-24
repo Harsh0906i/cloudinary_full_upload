@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
             res.redirect('/login');
             return;
         }
-        const token = jwt.sign({ id: existingUser._id }, process.env.JWT);
+        const token = jwt.sign({ id: existingUser._id }, process.env.JWT, { expiresIn: '1h' });
         res.cookie('access_token', token, { httpOnly: true })
         res.redirect('/home');
     } catch (error) {

@@ -13,7 +13,7 @@ const authMiddleware = (req, res, next) => {
         next();
     } catch (error) {
         console.log(error);
-        req.flash('message', 'Invalid token!');
+        req.flash('message', 'Login to access!');
         res.redirect('/login');
     }
 };
