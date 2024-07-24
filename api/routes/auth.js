@@ -76,7 +76,7 @@ router.post('/forget', async (req, res) => {
         existingUser.resetPasswordExpires = Date.now() + 3600000;
         await existingUser.save();
 
-        const resetUrl = `http://localhost:8080/reset-password?token=${token}`;
+        const resetUrl = `https://test-mu-sable-90.vercel.app/reset-password?token=${token}`;
         const mailOptions = {
             from: process.env.EMAIL,
             to: email,

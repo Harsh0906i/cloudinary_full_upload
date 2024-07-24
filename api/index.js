@@ -17,7 +17,7 @@ app.use(session({
 
 app.use(flash());
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views')); // Use path.join for views directory
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(cookie());
 app.use(express.static(path.join(__dirname, 'public')));
