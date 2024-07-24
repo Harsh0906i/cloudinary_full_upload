@@ -17,11 +17,13 @@ app.use(session({
 
 app.use(flash());
 app.set('view engine', 'ejs');
-app.set('views', './views');
+app.set('views', path.join(__dirname, 'views')); // Use path.join for views directory
+
 app.use(cookie());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use('/api/auth', authrouter);
 app.use('/api/post', userpost);
 main()
