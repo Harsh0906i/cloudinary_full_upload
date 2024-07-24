@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const userSchema = require('../models/user');
-const jwt=require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -31,7 +31,7 @@ router.post('/signup', async (req, res) => {
             email,
             password: hash
         });
-        const user=await newUser.save();
+        const user = await newUser.save();
         res.redirect('/login');
         req.flash('message', 'Signup successfull!');
     } catch (error) {
@@ -109,13 +109,12 @@ router.post('/forget', async (req, res) => {
 router.post('/reset-password', async (req, res) => {
     try {
         const { newPassword, token } = req.body;
-        const user = await userSchema.findOneAndUpdate({ resetPasswordToken: token })
+        const user = await userSchema.findOne({ resetPasswordToken: token });
 
-        if (!user) {
+        if (!user || user.resetPasswordExpires < Date.now()) {
             req.flash('message', 'Invalid or expired token.');
             return res.redirect('/reset-password');
         }
-
 
         user.password = await bcrypt.hash(newPassword, 10);
         user.resetPasswordToken = undefined;
@@ -130,6 +129,5 @@ router.post('/reset-password', async (req, res) => {
         res.redirect('/reset-password');
     }
 });
-
 
 module.exports = router;
